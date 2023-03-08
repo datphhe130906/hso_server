@@ -14,6 +14,13 @@ const addItemToUser = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getMyTransactions = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await webshopService.getMyTransactions(req.user, filter, options);
+  res.send(result);
+});
+
 const getCallBack = catchAsync(async (req, res) => {
   const result = await webshopService.callBackHistory(req.query);
   res.send(result);
@@ -21,6 +28,18 @@ const getCallBack = catchAsync(async (req, res) => {
 
 const createTransaction = catchAsync(async (req, res) => {
   const result = await webshopService.createTransaction(req.user, req.body);
+  res.send(result);
+});
+
+const topRank = catchAsync(async (req, res) => {
+  const result = await webshopService.rankKing(req.query.type);
+  res.send(result);
+});
+
+const getTransactions = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await webshopService.getTransactions(filter, options);
   res.send(result);
 });
 const getTransaction = catchAsync(async (req, res) => {
@@ -51,4 +70,7 @@ module.exports = {
   updateTransaction,
   napCard,
   getTransaction,
+  getTransactions,
+  getMyTransactions,
+  topRank,
 };

@@ -11,6 +11,8 @@ router
   .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
+router.get('/listPlayers', auth('getUsers'), userController.listPlayer);
+router.get('/listAccounts', auth('getUsers'), userController.listAccountGame);
 router
   .route('/:userId')
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)

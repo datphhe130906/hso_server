@@ -34,7 +34,7 @@ const checkTrans = async (request) => {
     code: request.data.code,
     partner_id: config.gachthe1s.partner_id,
     command: 'check',
-    sign: MD5(`${config.gachthe1s.partner_key}${request.code}${request.serial}`),
+    sign: MD5(`${config.gachthe1s.partner_key}${request.data.code}${request.data.serial}`).toString(),
   });
   switch (apiGachthe.data.status) {
     case 1:
@@ -59,6 +59,7 @@ const checkTrans = async (request) => {
     default:
       break;
   }
+  return apiGachthe.data;
 };
 
 const addItemToUserGame = async (user, body) => {
@@ -134,6 +135,7 @@ const napCard = async (user, body) => {
   const _trans = new Transaction();
   _trans.userId = user.id;
   _trans.type = 'card';
+  _trans.amount = body.amount;
   _trans.requestId = requestId;
   _trans.data = {
     amount: body.amount,
@@ -237,15 +239,65 @@ const createTransaction = async (user, body) => {
   const _trans = new Transaction();
   _trans.userId = user.id;
   _trans.type = body.type;
+  _trans.amount = body.amount;
   _trans.requestId = Math.random() * (999999999 - 10000000) + 10000000;
   _trans.status = 'pending';
   _trans.code = user.user;
   await _trans.save();
+  return _trans;
+};
+
+const rankKing = async (type) => {
+  if (type === 'topPay') {
+    const topPay = await Transaction.aggregate([
+      {
+        $match: {
+          status: 'success',
+        },
+      },
+      {
+        $group: {
+          _id: '$userId',
+          total: { $sum: '$data.amount' },
+        },
+      },
+      {
+        $sort: {
+          total: -1,
+        },
+      },
+      {
+        $limit: 10,
+      },
+    ]);
+    const topPayUser = await User.find()
+      .where('_id')
+      .in(topPay.map((item) => item._id))
+      .exec();
+    return topPayUser;
+  }
+  if (type === 'topLevel') {
+    const topLevel = await Player.findAll({
+      order: [['level', 'DESC']],
+      limit: 10,
+    });
+    return topLevel;
+  }
 };
 
 const getTransaction = async (transId) => {
   const _trans = await Transaction.findById(transId);
   return _trans;
+};
+
+const getTransactions = async (filter, options) => {
+  const transactions = await Transaction.paginate(filter, options);
+  return transactions;
+};
+
+const getMyTransactions = async (user, filter, options) => {
+  const transactions = await Transaction.paginate({ userId: user.id, ...filter }, options);
+  return transactions;
 };
 
 const updateTransaction = async (transId, body) => {
@@ -266,5 +318,8 @@ module.exports = {
   callBackHistory,
   checkTrans,
   getTransaction,
+  getTransactions,
+  getMyTransactions,
   napCard,
+  rankKing,
 };

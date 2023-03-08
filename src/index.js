@@ -5,6 +5,7 @@ const logger = require('./config/logger');
 const sequelize = require('./database/sequelize-instance');
 
 let server;
+
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   logger.info('Connected to MongoDB');
   server = app.listen(config.port, () => {

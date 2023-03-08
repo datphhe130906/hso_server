@@ -7,6 +7,12 @@ const transaction = mongoose.Schema(
       type: String,
       required: true,
     },
+    amount: {
+      type: Number,
+    },
+    playerName: {
+      type: String,
+    },
     requestId: {
       type: String,
       required: true,

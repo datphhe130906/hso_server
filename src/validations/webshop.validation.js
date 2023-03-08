@@ -13,6 +13,27 @@ const addItemToUserGame = {
   }),
 };
 
+const updateTransaction = {
+  params: Joi.object().keys({
+    transId: Joi.string().required(),
+  }),
+  body: Joi.object().keys({
+    status: Joi.string().required(),
+    amount: Joi.number(),
+  }),
+};
+
+const createTransaction = {
+  user: User,
+  body: Joi.object().keys({
+    code: Joi.number(),
+    serial: Joi.string(),
+    telco: Joi.string(),
+    amount: Joi.number().required(),
+    type: Joi.string().required(),
+  }),
+};
+
 const napCard = {
   user: User,
   body: Joi.object().keys({
@@ -26,4 +47,6 @@ const napCard = {
 module.exports = {
   addItemToUserGame,
   napCard,
+  createTransaction,
+  updateTransaction,
 };

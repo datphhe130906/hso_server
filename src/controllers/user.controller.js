@@ -16,6 +16,16 @@ const getUsers = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const listPlayer = catchAsync(async (req, res) => {
+  const result = await userService.listPlayer();
+  res.send(result);
+});
+
+const listAccountGame = catchAsync(async (req, res) => {
+  const result = await userService.listAccountGame();
+  res.send(result);
+});
+
 const getUser = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   if (!user) {
@@ -49,4 +59,6 @@ module.exports = {
   updateUser,
   deleteUser,
   activeUser,
+  listPlayer,
+  listAccountGame,
 };

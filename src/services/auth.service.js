@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
@@ -18,18 +19,26 @@ const checkDbGame = async (user, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect username or password');
   }
   let userDb = await User.findOne({
-    user: 'admin',
+    user: account.user,
   });
+  const player = JSON.parse(account.char);
   if (!userDb) {
     userDb = await User.create({
       user,
       password,
+      player1: player[0],
+      player2: player[1],
+      player3: player[2],
       role: 'user',
     });
   } else {
+    userDb.player1 = player[0];
+    userDb.player2 = player[1];
+    userDb.player3 = player[2];
     userDb.password = password;
     await userDb.save();
   }
+
   return userDb;
 };
 
@@ -40,12 +49,9 @@ const checkDbGame = async (user, password) => {
  * @returns {Promise<User>}
  */
 const loginUserWithUsernameAndPassword = async (user, password) => {
-  const account = await userService.getUserByUsername(user);
-  if (!account || !(password === account.password)) {
-    const checkUserIngame = await checkDbGame(user, password);
-    return checkUserIngame;
-  }
-  return account;
+  const checkUserIngame = await checkDbGame(user, password);
+  return checkUserIngame;
+  // }
 };
 
 /**

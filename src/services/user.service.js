@@ -24,6 +24,11 @@ const createUser = async (userBody) => {
   // newUser.player1 = userBody.user;
   newUser.status = 'pending';
   await newUser.save();
+  const newAccount = new Account();
+  newAccount.user = userBody.user;
+  newAccount.pass = userBody.password;
+  newAccount.status = 1;
+  await newAccount.save();
   return newUser;
 };
 
@@ -51,11 +56,18 @@ const activeUser = async (userId) => {
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async (filter, options) => {
-  const account = await Account.findAll();
-  // logger.info(account);
-  const player = await Player.findAll();
   const users = await User.paginate(filter, options);
-  return { player, users, accounts: account };
+  return { users };
+};
+
+const listPlayer = async () => {
+  const account = await Player.findAll();
+  return account;
+};
+
+const listAccountGame = async () => {
+  const account = await Account.findAll();
+  return account;
 };
 
 /**
@@ -114,4 +126,6 @@ module.exports = {
   getUserByUsername,
   updateUserById,
   deleteUserById,
+  listPlayer,
+  listAccountGame,
 };
