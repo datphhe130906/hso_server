@@ -59,7 +59,7 @@ const checkTrans = async (request) => {
     default:
       break;
   }
-  return apiGachthe.data;
+  return apiGachthe;
 };
 
 const addItemToUserGame = async (user, body) => {
