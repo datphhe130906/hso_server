@@ -3,6 +3,7 @@ const { Post } = require('../models');
 const createPost = async (post) => {
   const newPost = new Post();
   newPost.content = post.content.replace(/&lt;/g, '<');
+  await newPost.save();
   return newPost;
 };
 
