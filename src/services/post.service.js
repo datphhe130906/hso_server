@@ -1,7 +1,8 @@
 const { Post } = require('../models');
 
 const createPost = async (post) => {
-  const newPost = await Post.create(post);
+  const newPost = new Post();
+  newPost.content = post.content.replace(/&lt;/g, '<');
   return newPost;
 };
 
