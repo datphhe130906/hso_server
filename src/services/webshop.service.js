@@ -26,7 +26,7 @@ const getListItem = async (filter, options, listNumber) => {
       console.log(item);
       return item;
     default:
-      throw new ApiError(httpStatus.BAD_REQUEST, 'List number is not valid');
+      return Item3.paginate(filter, options);
   }
 };
 
