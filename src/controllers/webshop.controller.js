@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const { webshopService } = require('../services');
 
 const listItem = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['price']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await webshopService.getListItem(filter, options, req.query.item);
   res.send(result);

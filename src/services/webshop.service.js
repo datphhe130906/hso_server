@@ -14,7 +14,7 @@ const pick = require('../utils/pick');
  * @returns {Promise<Item3>}
  */
 const getListItem = async (filter, options, listNumber) => {
-  switch (listNumber) {
+  switch (parseInt(listNumber)) {
     case 3:
       return Item3.paginate(filter, options);
     case 4:
@@ -22,9 +22,11 @@ const getListItem = async (filter, options, listNumber) => {
     case 7:
       return Item7.paginate(filter, options);
     case 1:
-      return Item1.paginate(filter, options);
+      const item = await Item1.paginate(filter, options);
+      console.log(item);
+      return item;
     default:
-      return Item3.paginate(filter, options);
+      throw new ApiError(httpStatus.BAD_REQUEST, 'List number is not valid');
   }
 };
 
@@ -39,7 +41,7 @@ const checkTrans = async (request) => {
     command: 'check',
     sign: MD5(`${config.gachthe1s.partner_key}${request.data.code}${request.data.serial}`).toString(),
   });
-  switch (apiGachthe.data.status) {
+  switch (parseInt(apiGachthe.data.status)) {
     case 1:
     case 2: {
       await Transaction.findOneAndUpdate(
@@ -77,7 +79,7 @@ const addItemToUserGame = async (user, body) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Player not found');
   }
   let priceToPay;
-  switch (body.item) {
+  switch (parseInt(body.item)) {
     case 3: {
       itemInfo = await Item3.findOne({
         itemId: body.itemId,
@@ -179,7 +181,7 @@ const napCard = async (user, body) => {
     sign,
   });
   logger.info(apiGachthe.data);
-  switch (apiGachthe.data.status) {
+  switch (parseInt(apiGachthe.data.status)) {
     case 1:
     case 2:
       {
