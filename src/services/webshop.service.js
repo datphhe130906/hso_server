@@ -251,33 +251,19 @@ const createTransaction = async (user, body) => {
 
 const rankKing = async (type) => {
   if (type === 'topPay') {
-    const topPay = await Transaction.aggregate([
-      {
-        $match: {
-          status: 'success',
-          userId: { $ne: 'null' || null },
-        },
+    let rs = await User.find({}, ['totalPay', 'coin', 'user'], {
+      limit: 10,
+      sort: {
+        totalPay: -1,
       },
-      {
-        $group: {
-          _id: '$userId',
-          total: { $sum: '$amount' },
-        },
-      },
-      { $sort: { total: -1 } },
-      { $limit: 10 },
-    ]);
-    console.log(topPay);
-    const userIds = topPay.map((item) => {
-      if (item != null) return item._id;
     });
-    const topPayUser = await User.find()
-      .where('_id')
-      .in(topPay.map((item) => item._id))
-      .exec();
-    return topPayUser;
+    rs = JSON.parse(JSON.stringify(rs));
+    for (const iterator of rs) {
+      iterator.name = iterator.user;
+    }
+
+    return rs;
   }
-  console.log(topPayUser);
   if (type === 'topLevel') {
     const topLevel = await Player.findAll({
       order: [['level', 'DESC']],
