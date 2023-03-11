@@ -7,6 +7,7 @@ const { checkTrans } = require('./webshop.service');
 const { Transaction, User } = require('../models');
 const Account = require('../models/mysqlModel/user.model');
 const configs = require('../config/config');
+const TelegramBot = require('node-telegram-bot-api');
 
 async function runCronJob() {
   cron.schedule('00 */1 * * * *', async () => {
@@ -14,9 +15,9 @@ async function runCronJob() {
     const checkTransPending = await Transaction.find({
       status: 'pending',
       type: 'card',
-      createdAt: {
-        $gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      },
+      // createdAt: {
+      //   // $gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      // },
     });
     // eslint-disable-next-line no-restricted-syntax
     for (const iterator of checkTransPending) {
@@ -35,14 +36,26 @@ async function runCronJob() {
               },
             }
           );
-          await user.updateOne({
-            status: 'active',
-          });
+          await user.updateOne(
+            {
+              status: 'active',
+            },
+            { new: true }
+          );
         }
-        user.update({
-          coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100000,
-          totalPay: user.totalPay + rs.data.value,
-        });
+        await user.updateOne(
+          {
+            coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100000,
+            totalPay: user.totalPay + rs.data.value,
+          },
+          { new: true }
+        );
+        const bot = new TelegramBot('5880782879:AAFQcFfAQVYMoN3Oj2w4SYEibXw8QmElAjc', { polling: true });
+        await bot.sendMessage(
+          '-913523699',
+          `[Nhận tiền gachthe1s]:
+          Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`
+        );
       }
     }
   });
@@ -72,16 +85,23 @@ async function runCronJob() {
             tran.userId = 'null';
           }
           await tran.save();
-          console.log(tran);
           if (user.status !== 'active' && iterator.amount >= 100) {
-            user.update({
-              status: 'active',
-            });
+            await user.updateOne(
+              {
+                status: 'active',
+              },
+              { new: true }
+            );
           }
-          user.update({
-            coin: user.coin + iterator.amount / 1000,
-            totalPay: user.totalPay + iterator.amount,
-          });
+          await user.updateOne(
+            {
+              coin: user.coin + iterator.amount / 1000,
+              totalPay: user.totalPay + iterator.amount,
+            },
+            { new: true }
+          );
+          const bot = new TelegramBot('5880782879:AAFQcFfAQVYMoN3Oj2w4SYEibXw8QmElAjc', { polling: true });
+          await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
         }
       }
     }

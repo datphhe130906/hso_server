@@ -14,6 +14,19 @@ const addItemToUser = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const myHistory = catchAsync(async (req, res) => {
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await webshopService.myHistory(req.user, options);
+  res.send(result);
+});
+
+const queryHistory = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['typeItem', 'itemId', 'userId', 'itemId']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await webshopService.queryHistory(filter, options);
+  res.send(result);
+});
+
 const updateItem = catchAsync(async (req, res) => {
   const result = await webshopService.updateItem(req.params.item, req.body);
   res.send(result);
@@ -79,4 +92,6 @@ module.exports = {
   getMyTransactions,
   topRank,
   updateItem,
+  myHistory,
+  queryHistory,
 };

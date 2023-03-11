@@ -2,10 +2,11 @@ const httpStatus = require('http-status');
 const axios = require('axios');
 const { MD5 } = require('crypto-js');
 const config = require('../config/config');
-const { Item3, User, Item4, Item7, Transaction, Item1 } = require('../models');
+const { Item3, User, Item4, Item7, Transaction, Item1, History } = require('../models');
 const ApiError = require('../utils/ApiError');
 const Player = require('../models/mysqlModel/player.model');
 const logger = require('../config/logger');
+const pick = require('../utils/pick');
 
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
@@ -129,7 +130,28 @@ const addItemToUserGame = async (user, body) => {
   _user.coin -= priceToPay;
   await _user.save();
   await player.save();
+  const newHistory = new History();
+  newHistory.userId = _user.id;
+  newHistory.typeItem = body.item;
+  newHistory.itemId = body.itemId;
+  newHistory.unitPrice = itemInfo.price;
+  newHistory.quantity = body.quantity || 1;
+  newHistory.price = priceToPay;
+  await newHistory.save();
+
   return itemInfo;
+};
+
+const myHistory = async (user, query) => {
+  const options = pick(query, ['sortBy', 'limit', 'page']);
+  const filter = { userId: user.id };
+  const history = await History.paginate(filter, options);
+  return history;
+};
+
+const queryHistory = async (filter, options) => {
+  const histories = await History.paginate(filter, options);
+  return histories;
 };
 
 const napCard = async (user, body) => {
@@ -357,5 +379,7 @@ module.exports = {
   getMyTransactions,
   napCard,
   updateItem,
+  myHistory,
   rankKing,
+  queryHistory,
 };

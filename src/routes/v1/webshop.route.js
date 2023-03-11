@@ -14,6 +14,8 @@ router.post('/transaction', auth(), validate(webshopValidation.createTransaction
 router.post('/napCard', auth(), validate(webshopValidation.napCard), webshopController.napCard);
 router.get('/transaction', auth('manageUsers'), webshopController.getTransactions);
 router.get('/myTransaction', auth(), webshopController.getMyTransactions);
+router.get('/myHistory', auth(), webshopController.myHistory);
+router.get('/listHistories', auth('manageUsers'), webshopController.queryHistory);
 router.patch('/updateItem/:item', auth('manageUsers'), webshopController.updateItem);
 router
   .route('/transaction/:transId')
