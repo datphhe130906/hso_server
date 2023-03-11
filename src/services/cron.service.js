@@ -41,6 +41,7 @@ async function runCronJob() {
         }
         user.update({
           coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100000,
+          totalPay: user.totalPay + rs.data.value,
         });
       }
     }
@@ -79,6 +80,7 @@ async function runCronJob() {
           }
           user.update({
             coin: user.coin + iterator.amount / 1000,
+            totalPay: user.totalPay + iterator.amount,
           });
         }
       }
