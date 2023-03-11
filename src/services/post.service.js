@@ -7,6 +7,7 @@ const createPost = async (post) => {
   return newPost;
 };
 
+
 const updatePost = async (id, post) => {
   const newpost = await Post.findByIdAndUpdate(
     id,

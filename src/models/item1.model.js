@@ -1,22 +1,15 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const item4schema = mongoose.Schema(
+const item1 = mongoose.Schema(
   {
-    itemId: {
-      type: String,
-      required: true,
-    },
-    icon: {
-      type: Number,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
     },
     content: {
-      type: String,
+      type: Number,
+      required: true,
     },
     price: {
       type: Number,
@@ -29,12 +22,12 @@ const item4schema = mongoose.Schema(
   }
 );
 // add plugin that converts mongoose to json
-item4schema.plugin(toJSON);
-item4schema.plugin(paginate);
+item1.plugin(toJSON);
+item1.plugin(paginate);
 
 /**
- * @typedef Item4
+ * @typedef Item1
  */
-const Item4 = mongoose.model('Item4', item4schema);
+const Item1 = mongoose.model('Item1', item1);
 
-module.exports = Item4;
+module.exports = Item1;

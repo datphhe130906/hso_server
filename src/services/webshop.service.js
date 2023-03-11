@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const axios = require('axios');
 const { MD5 } = require('crypto-js');
 const config = require('../config/config');
-const { Item3, User, Item4, Item7, Transaction } = require('../models');
+const { Item3, User, Item4, Item7, Transaction, Item1 } = require('../models');
 const ApiError = require('../utils/ApiError');
 const Player = require('../models/mysqlModel/player.model');
 const logger = require('../config/logger');
@@ -16,12 +16,14 @@ const getListItem = async (filter, options, listNumber) => {
   switch (listNumber) {
     case 3:
       return Item3.paginate(filter, options);
-    // case 4:
-    //   return Item4.find();
-    // case 7:
-    //   return Item7.find();
+    case 4:
+      return Item4.paginate(filter, options);
+    case 7:
+      return Item7.paginate(filter, options);
+    case 1:
+      return Item1.paginate(filter, options);
     default:
-      return Item3.find();
+      return Item3.paginate(filter, options);
   }
 };
 
@@ -253,29 +255,29 @@ const rankKing = async (type) => {
       {
         $match: {
           status: 'success',
+          userId: { $ne: 'null' || null },
         },
       },
       {
         $group: {
           _id: '$userId',
-          total: { $sum: '$data.amount' },
+          total: { $sum: '$amount' },
         },
       },
-      {
-        $sort: {
-          total: -1,
-        },
-      },
-      {
-        $limit: 10,
-      },
+      { $sort: { total: -1 } },
+      { $limit: 10 },
     ]);
+    console.log(topPay);
+    const userIds = topPay.map((item) => {
+      if (item != null) return item._id;
+    });
     const topPayUser = await User.find()
       .where('_id')
       .in(topPay.map((item) => item._id))
       .exec();
     return topPayUser;
   }
+  console.log(topPayUser);
   if (type === 'topLevel') {
     const topLevel = await Player.findAll({
       order: [['level', 'DESC']],
@@ -293,6 +295,53 @@ const getTransaction = async (transId) => {
 const getTransactions = async (filter, options) => {
   const transactions = await Transaction.paginate(filter, options);
   return transactions;
+};
+
+const updateItem = async (item, body) => {
+  let rs;
+  console.log(item);
+  switch (parseInt(item, 10)) {
+    case 1:
+      rs = await Item1.findById(body.itemId);
+      rs.name = body.name || rs.name;
+      rs.content = body.content || rs.content;
+      rs.price = body.price || rs.price;
+      await rs.save();
+      break;
+    case 3:
+      rs = await Item3.findById(body.itemId);
+      rs.name = body.name || rs.name;
+      rs.iconId = body.iconId || rs.iconId;
+      rs.price = body.price || rs.price;
+      rs.content = body.content || rs.content;
+      rs.level = body.level || rs.level;
+      rs.clazz = body.clazz || rs.clazz;
+      rs.part = body.part || rs.part;
+      rs.type = body.type || rs.type;
+      rs.color = body.color || rs.color;
+      rs.data = body.data || rs.data;
+      await rs.save();
+      break;
+    case 4:
+      rs = await Item4.findById(body.itemId);
+      rs.icon = body.icon || rs.icon;
+      rs.name = body.name || rs.name;
+      rs.price = body.price || rs.price;
+      rs.content = body.content || rs.content;
+      await rs.save();
+      break;
+    case 7:
+      rs = await Item7.findById(body.itemId);
+      rs.name = body.name || rs.name;
+      rs.content = body.content || rs.content;
+      rs.price = body.price || rs.price;
+      rs.imgId = body.imgId || rs.imgId;
+      await rs.save();
+      break;
+    default:
+      throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
+  }
+  return rs;
 };
 
 const getMyTransactions = async (user, filter, options) => {
@@ -321,5 +370,6 @@ module.exports = {
   getTransactions,
   getMyTransactions,
   napCard,
+  updateItem,
   rankKing,
 };

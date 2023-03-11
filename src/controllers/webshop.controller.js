@@ -14,6 +14,11 @@ const addItemToUser = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const updateItem = catchAsync(async (req, res) => {
+  const result = await webshopService.updateItem(req.params.item, req.body);
+  res.send(result);
+});
+
 const getMyTransactions = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -73,4 +78,5 @@ module.exports = {
   getTransactions,
   getMyTransactions,
   topRank,
+  updateItem,
 };

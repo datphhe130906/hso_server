@@ -5,3 +5,5 @@ module.exports.Item4 = require('./item4.model');
 module.exports.Item7 = require('./item7.model');
 module.exports.Transaction = require('./transaction.model');
 module.exports.Post = require('./post.model');
+module.exports.Item1 = require('./item1.model');
+module.exports.History = require('./history.model');

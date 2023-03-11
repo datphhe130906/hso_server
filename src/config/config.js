@@ -56,4 +56,8 @@ module.exports = {
     user: envVars.DB_USER,
     password: envVars.DB_PASSWORD,
   },
+  momoApis: {
+    getHistory: envVars.API_MOMO_HISTORY,
+    token: envVars.TOKEN_MOMO,
+  },
 };

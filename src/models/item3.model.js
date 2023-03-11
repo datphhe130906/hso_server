@@ -39,6 +39,9 @@ const item3schema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    content: {
+      type: String,
+    },
   },
   {
     timestamps: true,
