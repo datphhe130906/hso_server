@@ -7,12 +7,11 @@ const createPost = async (post) => {
   return newPost;
 };
 
-
 const updatePost = async (id, post) => {
   const newpost = await Post.findByIdAndUpdate(
     id,
     {
-      content: post.content,
+      content: post.content.replace(/&lt;/g, '<'),
     },
     { new: true }
   );
