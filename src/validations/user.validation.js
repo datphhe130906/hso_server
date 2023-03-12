@@ -35,6 +35,8 @@ const updateUser = {
       player1: Joi.string(),
       player2: Joi.string(),
       player3: Joi.string(),
+      status: Joi.string().valid('active', 'pending', 'ban'),
+      role: Joi.string().valid('user', 'admin'),
     })
     .min(1),
 };

@@ -25,7 +25,7 @@ async function runCronJob() {
       const rs = await checkTrans(iterator);
       if (rs.data.status == 1 || rs.data.status == 2) {
         const user = await User.findById(iterator.userId);
-        if (user.status !== 'active' && parseInt(rs.data.value, 10) >= 10000) {
+        if (user.status !== 'active' && parseInt(rs.data.value, 10) >= 20000) {
           await Account.update(
             {
               status: 0,
@@ -45,7 +45,7 @@ async function runCronJob() {
         }
         await user.updateOne(
           {
-            coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100000,
+            coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100,
             totalPay: user.totalPay + rs.data.value,
           },
           { new: true }
@@ -68,7 +68,7 @@ async function runCronJob() {
         const checkValidTran = await Transaction.findOne({
           requestId: iterator.tranId,
         });
-        if (!checkValidTran && parseInt(iterator.status) === 999) {
+        if (checkValidTran && parseInt(iterator.status) === 999) {
           const user = await User.findOne({
             user: iterator.comment,
           });
@@ -85,7 +85,17 @@ async function runCronJob() {
             tran.userId = 'null';
           }
           await tran.save();
-          if (user.status !== 'active' && iterator.amount >= 100) {
+          if (user.status !== 'active' && iterator.amount >= 20000) {
+            await Account.update(
+              {
+                status: 0,
+              },
+              {
+                where: {
+                  user: user.user,
+                },
+              }
+            );
             await user.updateOne(
               {
                 status: 'active',
@@ -95,7 +105,7 @@ async function runCronJob() {
           }
           await user.updateOne(
             {
-              coin: user.coin + iterator.amount / 1000,
+              coin: user.coin + iterator.amount,
               totalPay: user.totalPay + iterator.amount,
             },
             { new: true }
