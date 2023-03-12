@@ -95,6 +95,11 @@ const addItemToUserGame = async (user, body) => {
       break;
     }
 
+    case 1: {
+      
+      break;
+    }
+
     case 4: {
       itemInfo = await Item4.findOne({ itemId: body.itemId });
       const oldItem = JSON.parse(player.item4);

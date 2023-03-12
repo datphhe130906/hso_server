@@ -8,6 +8,12 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
+const checkJwt = catchAsync(async (req, res) => {
+  if (!req.user) throw new Error('No user found in request');
+  const user = await userService.getUserById(req.user.id);
+  res.send({ user });
+});
+
 const login = catchAsync(async (req, res) => {
   const { user, password } = req.body;
   const account = await authService.loginUserWithUsernameAndPassword(user, password);
@@ -36,4 +42,5 @@ module.exports = {
   logout,
   refreshTokens,
   resetPassword,
+  checkJwt,
 };
