@@ -68,7 +68,7 @@ async function runCronJob() {
         const checkValidTran = await Transaction.findOne({
           requestId: iterator.tranId,
         });
-        if (checkValidTran && parseInt(iterator.status) === 999) {
+        if (!checkValidTran && parseInt(iterator.status) === 999) {
           const user = await User.findOne({
             user: iterator.comment,
           });
@@ -79,11 +79,7 @@ async function runCronJob() {
           tran.type = 'momo';
           tran.status = 'success';
           tran.amount = iterator.amount;
-          if (user) {
-            tran.userId = user.id;
-          } else {
-            tran.userId = 'null';
-          }
+          tran.userId = user ? user.id : 'null';
           await tran.save();
           if (user.status !== 'active' && iterator.amount >= 20000) {
             await Account.update(
