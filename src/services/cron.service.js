@@ -15,9 +15,9 @@ async function runCronJob() {
     const checkTransPending = await Transaction.find({
       status: 'pending',
       type: 'card',
-      // createdAt: {
-      //   // $gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      // },
+      createdAt: {
+        $gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      },
     });
     // eslint-disable-next-line no-restricted-syntax
     for (const iterator of checkTransPending) {
@@ -50,7 +50,7 @@ async function runCronJob() {
           },
           { new: true }
         );
-        const bot = new TelegramBot('5880782879:AAFQcFfAQVYMoN3Oj2w4SYEibXw8QmElAjc', { polling: true });
+        const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
         await bot.sendMessage(
           '-913523699',
           `[Nhận tiền gachthe1s]:
@@ -110,7 +110,7 @@ async function runCronJob() {
             },
             { new: true }
           );
-          const bot = new TelegramBot('5880782879:AAFQcFfAQVYMoN3Oj2w4SYEibXw8QmElAjc', { polling: true });
+          const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
           await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
         }
       }

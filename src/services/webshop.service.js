@@ -96,7 +96,6 @@ const addItemToUserGame = async (user, body) => {
     }
 
     case 1: {
-      
       break;
     }
 
@@ -187,24 +186,12 @@ const napCard = async (user, body) => {
   });
   logger.info(apiGachthe.data);
   switch (parseInt(apiGachthe.data.status)) {
-    case 1:
-    case 2:
-      {
-        _trans.status = 'success';
-        _trans.statusResponse = apiGachthe.data.message;
-        const _user = await User.findOne({ user: user.user });
-        _user.coin += (apiGachthe.data.value * config.gachthe1s.rate) / 100000;
-        await _user.save();
-      }
+    case 1 || 2 || 99:
+      _trans.status = 'pending';
       break;
-    case 3:
-    case 4:
-    case 100:
+    case 3 || 4 || 100:
       _trans.status = 'failed';
       _trans.statusResponse = apiGachthe.data.message;
-      break;
-    case 99:
-      _trans.status = 'pending';
       break;
     default:
       throw new ApiError(httpStatus.BAD_REQUEST, 'Lỗi hệ thống');
@@ -214,56 +201,55 @@ const napCard = async (user, body) => {
 };
 
 const callBackHistory = async (request) => {
-  const _transCallback = await Transaction.findOne({ requestId: request.request_id });
-  // eslint-disable-next-line eqeqeq
-  if (_transCallback.status === 'pending') {
-    const apiGachthe = await axios.post(config.gachthe1s.url, {
-      request_id: request.request_id,
-      amount: request.declared_value,
-      telco: request.telco,
-      serial: request.serial,
-      code: request.code,
-      partner_id: config.gachthe1s.partner_id,
-      command: 'check',
-      sign: MD5(`${config.gachthe1s.partner_key}${request.code}${request.serial}`).toString(),
-    });
-    // eslint-disable-next-line eqeqeq
-    if (apiGachthe.status != 99) {
-      switch (apiGachthe.data.status) {
-        case 1 || '1':
-          _transCallback.status = 'success';
-          _transCallback.statusResponse = apiGachthe.data.message;
-          break;
-        case 2 || '2':
-          _transCallback.status = 'success';
-          _transCallback.statusResponse = apiGachthe.data.message;
-          break;
-        case 3 || '3':
-          _transCallback.status = 'failed';
-          _transCallback.statusResponse = apiGachthe.data.message;
-          break;
-        case 4 || '4':
-          _transCallback.status = 'failed';
-          _transCallback.statusResponse = apiGachthe.data.message;
-          break;
-        case 100 || '100':
-          _transCallback.status = 'failed';
-          _transCallback.statusResponse = apiGachthe.data.message;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  if (!_transCallback) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
-  }
-  _transCallback.data = request;
-  await _transCallback.save();
-  logger.info('Transaction callback', _transCallback);
-  logger.info('Request callback', request);
-  return _transCallback;
+  // const _transCallback = await Transaction.findOne({ requestId: request.request_id });
+  // // eslint-disable-next-line eqeqeq
+  // if (_transCallback.status === 'pending') {
+  //   const apiGachthe = await axios.post(config.gachthe1s.url, {
+  //     request_id: request.request_id,
+  //     amount: request.declared_value,
+  //     telco: request.telco,
+  //     serial: request.serial,
+  //     code: request.code,
+  //     partner_id: config.gachthe1s.partner_id,
+  //     command: 'check',
+  //     sign: MD5(`${config.gachthe1s.partner_key}${request.code}${request.serial}`).toString(),
+  //   });
+  //   // eslint-disable-next-line eqeqeq
+  //   if (apiGachthe.status != 99) {
+  //     switch (apiGachthe.data.status) {
+  //       case 1 || '1':
+  //         _transCallback.status = 'success';
+  //         _transCallback.statusResponse = apiGachthe.data.message;
+  //         break;
+  //       case 2 || '2':
+  //         _transCallback.status = 'success';
+  //         _transCallback.statusResponse = apiGachthe.data.message;
+  //         break;
+  //       case 3 || '3':
+  //         _transCallback.status = 'failed';
+  //         _transCallback.statusResponse = apiGachthe.data.message;
+  //         break;
+  //       case 4 || '4':
+  //         _transCallback.status = 'failed';
+  //         _transCallback.statusResponse = apiGachthe.data.message;
+  //         break;
+  //       case 100 || '100':
+  //         _transCallback.status = 'failed';
+  //         _transCallback.statusResponse = apiGachthe.data.message;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // }
+  // if (!_transCallback) {
+  //   throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
+  // }
+  // _transCallback.data = request;
+  // await _transCallback.save();
+  // logger.info('Transaction callback', _transCallback);
+  // logger.info('Request callback', request);
+  // return _transCallback;
 };
 
 const createTransaction = async (user, body) => {
