@@ -25,7 +25,7 @@ async function runCronJob() {
       const rs = await checkTrans(iterator);
       if (rs.data.status == 1 || rs.data.status == 2) {
         const user = await User.findById(iterator.userId);
-        if (user.status !== 'active' && parseInt(rs.data.value, 10) >= 20000) {
+        if (user.status !== 'active' && parseInt(rs.data.value, 10) >= 10000) {
           await Account.update(
             {
               status: 0,
