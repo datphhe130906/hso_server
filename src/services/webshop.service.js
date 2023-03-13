@@ -187,14 +187,18 @@ const napCard = async (user, body) => {
   logger.info(apiGachthe.data);
   switch (parseInt(apiGachthe.data.status)) {
     case 1 || 2 || 99:
+      console.log('oke');
       _trans.status = 'pending';
       break;
     case 3 || 4 || 100:
+      console.log('fail');
       _trans.status = 'failed';
       _trans.statusResponse = apiGachthe.data.message;
       break;
     default:
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Lỗi hệ thống');
+      console.log('fail');
+      _trans.status = 'failed';
+      _trans.statusResponse = apiGachthe.data.message;
   }
   await _trans.save();
   return _trans;
