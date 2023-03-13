@@ -50,12 +50,12 @@ async function runCronJob() {
           },
           { new: true }
         );
-        // const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
-        // await bot.sendMessage(
-        //   '-913523699',
-        //   `[Nhận tiền gachthe1s]:
-        //   Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`
-        // );
+        const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+        await bot.sendMessage(
+          '-913523699',
+          `[Nhận tiền gachthe1s]:
+          Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`
+        );
       }
     }
   });
@@ -68,7 +68,10 @@ async function runCronJob() {
         const checkValidTran = await Transaction.findOne({
           requestId: iterator.tranId,
         });
-        if (!checkValidTran && parseInt(iterator.status) === 999) {
+        console.log(checkValidTran);
+        if (checkValidTran) continue;
+        if (parseInt(iterator.status) === 999) {
+          console.log(iterator);
           const user = await User.findOne({
             user: iterator.comment,
           });
@@ -106,8 +109,8 @@ async function runCronJob() {
             },
             { new: true }
           );
-          // const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
-          // await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
+          const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+          await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
         }
       }
     }

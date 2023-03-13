@@ -186,17 +186,37 @@ const napCard = async (user, body) => {
   });
   logger.info(apiGachthe.data);
   switch (parseInt(apiGachthe.data.status)) {
-    case 1 || 2 || 99:
-      console.log('oke');
+    case 99:
+      console.log('99');
       _trans.status = 'pending';
       break;
-    case 3 || 4 || 100:
+    case 1:
+      console.log('1');
+      _trans.status = 'pending';
+      break;
+    case 2:
+      console.log('2');
+      _trans.status = 'pending';
+      break;
+    case 3:
       console.log('fail');
       _trans.status = 'failed';
       _trans.statusResponse = apiGachthe.data.message;
       break;
+
+    case 4:
+      console.log('4');
+      _trans.status = 'failed';
+      _trans.statusResponse = apiGachthe.data.message;
+      break;
+
+    case 100:
+      console.log('100');
+      _trans.status = 'failed';
+      _trans.statusResponse = apiGachthe.data.message;
+      break;
     default:
-      console.log('fail');
+      console.log('faildefault');
       _trans.status = 'failed';
       _trans.statusResponse = apiGachthe.data.message;
   }
