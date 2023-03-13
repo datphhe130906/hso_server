@@ -7,7 +7,7 @@ const { checkTrans } = require('./webshop.service');
 const { Transaction, User } = require('../models');
 const Account = require('../models/mysqlModel/user.model');
 const configs = require('../config/config');
-const TelegramBot = require('node-telegram-bot-api');
+// const TelegramBot = require('node-telegram-bot-api');
 
 async function runCronJob() {
   cron.schedule('00 */1 * * * *', async () => {
@@ -50,12 +50,12 @@ async function runCronJob() {
           },
           { new: true }
         );
-        const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
-        await bot.sendMessage(
-          '-913523699',
-          `[Nhận tiền gachthe1s]:
-          Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`
-        );
+        // const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+        // await bot.sendMessage(
+        //   '-913523699',
+        //   `[Nhận tiền gachthe1s]:
+        //   Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`
+        // );
       }
     }
   });
@@ -110,8 +110,8 @@ async function runCronJob() {
             },
             { new: true }
           );
-          const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
-          await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
+          // const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+          // await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
         }
       }
     }
