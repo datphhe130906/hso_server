@@ -68,10 +68,8 @@ async function runCronJob() {
         const checkValidTran = await Transaction.findOne({
           requestId: iterator.tranId,
         });
-        console.log(checkValidTran);
         if (checkValidTran) continue;
         if (parseInt(iterator.status) === 999) {
-          console.log(iterator);
           const user = await User.findOne({
             user: iterator.comment,
           });

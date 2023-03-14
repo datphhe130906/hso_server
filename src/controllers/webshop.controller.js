@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const { webshopService } = require('../services');
 
 const listItem = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['price']);
+  const filter = pick(req.query, ['price', 'name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await webshopService.getListItem(filter, options, req.query.item);
   res.send(result);
@@ -11,6 +11,11 @@ const listItem = catchAsync(async (req, res) => {
 
 const addItemToUser = catchAsync(async (req, res) => {
   const result = await webshopService.addItemToUserGame(req.user, req.body);
+  res.send(result);
+});
+
+const buyMoneyInGame = catchAsync(async (req, res) => {
+  const result = await webshopService.buyMoneyInGame(req.user, req.body);
   res.send(result);
 });
 
@@ -92,6 +97,7 @@ module.exports = {
   getMyTransactions,
   topRank,
   updateItem,
+  buyMoneyInGame,
   myHistory,
   queryHistory,
 };

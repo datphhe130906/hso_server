@@ -99,6 +99,8 @@ const updateUserById = async (userId, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
+  if (updateBody.updatedBy != userId && user.role !== 'admin')
+    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this user');
   Object.assign(user, updateBody);
   await user.save();
   return user;

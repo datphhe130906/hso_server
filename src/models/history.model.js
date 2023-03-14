@@ -9,19 +9,18 @@ const history = mongoose.Schema(
     },
     unitPrice: {
       type: Number,
-      require: true,
     },
     quantity: {
       type: Number,
       require: true,
     },
+    // type of item: 1: Vàng, 2: Kim Cương, 3: Trang Bị...
     typeItem: {
       type: Number,
       require: true,
     },
     itemId: {
       type: String,
-      require: true,
     },
   },
   {

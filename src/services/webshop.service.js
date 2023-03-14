@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const axios = require('axios');
 const { MD5 } = require('crypto-js');
 const config = require('../config/config');
-const { Item3, User, Item4, Item7, Transaction, Item1, History } = require('../models');
+const { Item3, User, Item4, Item7, Transaction, History } = require('../models');
 const ApiError = require('../utils/ApiError');
 const Player = require('../models/mysqlModel/player.model');
 const logger = require('../config/logger');
@@ -21,10 +21,6 @@ const getListItem = async (filter, options, listNumber) => {
       return Item4.paginate(filter, options);
     case 7:
       return Item7.paginate(filter, options);
-    case 1:
-      const item = await Item1.paginate(filter, options);
-      console.log(item);
-      return item;
     default:
       return Item3.paginate(filter, options);
   }
@@ -148,16 +144,43 @@ const addItemToUserGame = async (user, body) => {
   return itemInfo;
 };
 
+const buyMoneyInGame = async (user, body) => {
+  const player = await Player.findOne({
+    where: {
+      name: body.player,
+    },
+  });
+  let priceToPay;
+  if (body.type != 'kimcuong' && body.type != 'vang') throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
+  if (body.type == 'vang') {
+    player.vang += value;
+    priceToPay -= Math.round(body.value / 5000);
+  }
+  if (body.type == 'kimcuong') {
+    player.kimcuong += body.value;
+    priceToPay -= body.value * 2;
+  }
+  if (priceToPay > user.coin) throw new ApiError(httpStatus.PAYMENT_REQUIRED, 'Bạn không đủ tiền thanh toán');
+  user.coin -= priceToPay;
+  await user.save();
+  await player.save();
+  const newHistory = new History();
+  newHistory.userId = user.id;
+  newHistory.typeItem = body.type == 'vang' ? 1 : 2;
+  newHistory.quantity = body.value;
+  newHistory.price = priceToPay;
+  await newHistory.save();
+  return player;
+};
+
 const myHistory = async (user, query) => {
   const options = pick(query, ['sortBy', 'limit', 'page']);
   const filter = { userId: user.id };
-  const history = await History.paginate(filter, options);
-  return history;
+  return await History.paginate(filter, options);
 };
 
 const queryHistory = async (filter, options) => {
-  const histories = await History.paginate(filter, options);
-  return histories;
+  return await History.paginate(filter, options);
 };
 
 const napCard = async (user, body) => {
@@ -281,7 +304,7 @@ const createTransaction = async (user, body) => {
   _trans.userId = user.id;
   _trans.type = body.type;
   _trans.amount = body.amount;
-  _trans.requestId = Math.random() * (999999999 - 10000000) + 10000000;
+  _trans.requestId = Math.random() * (999_999_999 - 100_000_000) + 100_000_000;
   _trans.status = 'pending';
   _trans.code = user.user;
   await _trans.save();
@@ -304,11 +327,10 @@ const rankKing = async (type) => {
     return rs;
   }
   if (type === 'topLevel') {
-    const topLevel = await Player.findAll({
+    return await Player.findAll({
       order: [['level', 'DESC']],
       limit: 10,
     });
-    return topLevel;
   }
 };
 
@@ -324,15 +346,7 @@ const getTransactions = async (filter, options) => {
 
 const updateItem = async (item, body) => {
   let rs;
-  console.log(item);
   switch (parseInt(item, 10)) {
-    case 1:
-      rs = await Item1.findById(body.itemId);
-      rs.name = body.name || rs.name;
-      rs.content = body.content || rs.content;
-      rs.price = body.price || rs.price;
-      await rs.save();
-      break;
     case 3:
       rs = await Item3.findById(body.itemId);
       rs.name = body.name || rs.name;
@@ -397,6 +411,7 @@ module.exports = {
   napCard,
   updateItem,
   myHistory,
+  buyMoneyInGame,
   rankKing,
   queryHistory,
 };

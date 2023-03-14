@@ -13,6 +13,14 @@ const addItemToUserGame = {
   }),
 };
 
+const buyMoneyInGame = {
+  user: User,
+  body: Joi.object().keys({
+    type: Joi.string().required().valid('vang', 'kimcuong'),
+    player: Joi.string().required(),
+    value: Joi.number().required(),
+  }),
+};
 const updateTransaction = {
   params: Joi.object().keys({
     transId: Joi.string().required(),
@@ -49,4 +57,5 @@ module.exports = {
   napCard,
   createTransaction,
   updateTransaction,
+  buyMoneyInGame,
 };
