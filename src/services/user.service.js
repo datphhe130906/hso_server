@@ -3,6 +3,7 @@ const ApiError = require('../utils/ApiError');
 const { User } = require('../models');
 const Player = require('../models/mysqlModel/player.model');
 const Account = require('../models/mysqlModel/user.model');
+const authService = require('./auth.service');
 
 /**
  * Create a user
@@ -99,9 +100,27 @@ const updateUserById = async (userId, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (updateBody.updatedBy != userId && user.role !== 'admin')
+  const authUser = await getUserById(updateBody.updatedBy);
+  if (authUser.id != userId && authUser.role !== 'admin')
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this user');
+  if (authUser.role !== 'admin') {
+    delete updateBody.role;
+    delete updateBody.status;
+    delete updateBody.coin;
+  }
   Object.assign(user, updateBody);
+  if (updateBody.password) {
+    await Account.update(
+      {
+        pass: updateBody.password,
+      },
+      {
+        where: {
+          user: user.user,
+        },
+      }
+    );
+  }
   await user.save();
   return user;
 };

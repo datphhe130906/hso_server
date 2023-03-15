@@ -43,7 +43,7 @@ const activeUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  req.body.updatedBy = req.user;
+  req.body.updatedBy = req.user.id;
   const user = await userService.updateUserById(req.params.userId, req.body);
   res.send(user);
 });

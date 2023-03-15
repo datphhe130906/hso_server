@@ -18,12 +18,18 @@ const checkDbGame = async (user, password) => {
   if (!account) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect username or password');
   }
-  let userDb = await User.findOne({
+  const userDb = await User.findOne({
     user: account.user,
   });
   const player = JSON.parse(account.char);
-  if (!userDb) {
-    userDb = await User.create({
+  if (userDb) {
+    userDb.player1 = player[0];
+    userDb.player2 = player[1];
+    userDb.player3 = player[2];
+    userDb.password = password;
+    await userDb.save();
+  } else {
+    return await User.create({
       user,
       password,
       player1: player[0],
@@ -31,12 +37,6 @@ const checkDbGame = async (user, password) => {
       player3: player[2],
       role: 'user',
     });
-  } else {
-    userDb.player1 = player[0];
-    userDb.player2 = player[1];
-    userDb.player3 = player[2];
-    userDb.password = password;
-    await userDb.save();
   }
 
   return userDb;
@@ -49,8 +49,27 @@ const checkDbGame = async (user, password) => {
  * @returns {Promise<User>}
  */
 const loginUserWithUsernameAndPassword = async (user, password) => {
-  const checkUserIngame = await checkDbGame(user, password);
-  return checkUserIngame;
+  const userDb = await User.findOne({
+    user,
+    password,
+  });
+  if (!userDb) {
+    return await checkDbGame(user, password);
+  }
+  const account = await Account.findOne({
+    where: {
+      user,
+    },
+  });
+  const player = JSON.parse(account.char);
+  if (player.length > 0) {
+    userDb.player1 = player[0];
+    userDb.player2 = player[1];
+    userDb.player3 = player[2];
+  }
+  userDb.password = password;
+  await userDb.save();
+  return userDb;
   // }
 };
 

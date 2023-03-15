@@ -31,12 +31,14 @@ const updateUser = {
   }),
   body: Joi.object()
     .keys({
+      oldPassword: Joi.string().custom(password),
       password: Joi.string().custom(password),
       player1: Joi.string(),
       player2: Joi.string(),
       player3: Joi.string(),
       status: Joi.string().valid('active', 'pending', 'ban'),
       role: Joi.string().valid('user', 'admin'),
+      coin: Joi.number(),
     })
     .min(1),
 };
