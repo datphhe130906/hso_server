@@ -15,7 +15,7 @@ const updatePost = catchAsync(async (req, res) => {
 });
 
 const listPost = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['title']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await postService.listPost(filter, options);
   res.send(result);

@@ -3,6 +3,11 @@ const { toJSON, paginate } = require('./plugins');
 
 const post = mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     content: {
       type: String,
       required: true,

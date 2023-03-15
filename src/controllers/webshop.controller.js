@@ -20,8 +20,9 @@ const buyMoneyInGame = catchAsync(async (req, res) => {
 });
 
 const myHistory = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['typeItem', 'itemId', 'userId', 'itemId']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await webshopService.myHistory(req.user, options);
+  const result = await webshopService.myHistory(filter, options);
   res.send(result);
 });
 
@@ -38,7 +39,7 @@ const updateItem = catchAsync(async (req, res) => {
 });
 
 const getMyTransactions = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['type', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await webshopService.getMyTransactions(req.user, filter, options);
   res.send(result);
@@ -60,7 +61,7 @@ const topRank = catchAsync(async (req, res) => {
 });
 
 const getTransactions = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['type', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await webshopService.getTransactions(filter, options);
   res.send(result);

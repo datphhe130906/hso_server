@@ -7,6 +7,7 @@ const ApiError = require('../utils/ApiError');
 const Player = require('../models/mysqlModel/player.model');
 const logger = require('../config/logger');
 const pick = require('../utils/pick');
+const { filter } = require('compression');
 
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
@@ -175,7 +176,7 @@ const buyMoneyInGame = async (user, body) => {
 
 const myHistory = async (user, query) => {
   const options = pick(query, ['sortBy', 'limit', 'page']);
-  const filter = { userId: user.id };
+  const filter = Object.assign(filter, { userId: user.id });
   return await History.paginate(filter, options);
 };
 

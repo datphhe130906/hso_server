@@ -2,6 +2,7 @@ const { Post } = require('../models');
 
 const createPost = async (post) => {
   const newPost = new Post();
+  newPost.title = post.title;
   newPost.content = post.content.replace(/&lt;/g, '<');
   await newPost.save();
   return newPost;
@@ -11,6 +12,7 @@ const updatePost = async (id, post) => {
   const newpost = await Post.findByIdAndUpdate(
     id,
     {
+      title: post.title,
       content: post.content.replace(/&lt;/g, '<'),
     },
     { new: true }
@@ -19,13 +21,11 @@ const updatePost = async (id, post) => {
 };
 
 const listPost = async (filter, options) => {
-  const posts = await Post.paginate(filter, options);
-  return posts;
+  return await Post.paginate(filter, options);
 };
 
 const getPostById = async (id) => {
-  const post = await Post.findById(id);
-  return post;
+  return await Post.findById(id);
 };
 
 const delPost = async (id) => {
