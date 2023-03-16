@@ -17,9 +17,10 @@ router.get('/myTransaction', auth(), webshopController.getMyTransactions);
 router.get('/myHistory', auth(), webshopController.myHistory);
 router.get('/listHistories', auth('manageUsers'), webshopController.queryHistory);
 router.patch('/updateItem/:item', auth('manageUsers'), webshopController.updateItem);
-router.get('/:type/:id', auth(), webshopController.getItem);
 router.get('/:type', auth(), webshopController.listItem);
 router.post('/:type', auth('manageUsers'), webshopController.createItem);
+router.get('/:type/:id', auth(), webshopController.getItem);
+router.delete('/:type/:id', auth('manageUsers'), webshopController.deleteItem);
 router
   .route('/transaction/:transId')
   .get(auth('manageUsers'), webshopController.getTransaction)

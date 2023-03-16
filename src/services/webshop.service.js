@@ -38,7 +38,7 @@ const createItem = async (type, body) => {
       break;
     case 7:
       rs = new Item7();
-      item.itemId = body.itemId;
+      rs.itemId = body.itemId;
       rs.name = body.name;
       rs.content = body.content;
       rs.price = body.price;
@@ -79,7 +79,20 @@ const getItem = async (listNumber, itemId) => {
     case 7:
       return Item7.findById(itemId);
     default:
-      throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
+      throw new ApiError(httpStatus.BAD_GATEWAY, 'Unprocessable Entity');
+  }
+};
+
+const deleteItem = async (listNumber, itemId) => {
+  switch (parseInt(listNumber)) {
+    case 3:
+      return Item3.findByIdAndDelete(itemId);
+    case 4:
+      return Item4.findByIdAndDelete(itemId);
+    case 7:
+      return Item7.findByIdAndDelete(itemId);
+    default:
+      throw new ApiError(httpStatus.BAD_GATEWAY, 'Unprocessable Entity');
   }
 };
 
@@ -181,7 +194,7 @@ const addItemToUserGame = async (user, body) => {
       break;
     }
     default:
-      throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
+      throw new ApiError(httpStatus.BAD_GATEWAY, 'Unprocessable Entity');
   }
   if (priceToPay > _user.coin) {
     throw new ApiError(httpStatus.PAYMENT_REQUIRED, 'Bạn không đủ tiền thanh toán');
@@ -475,4 +488,5 @@ module.exports = {
   queryHistory,
   createItem,
   getItem,
+  deleteItem,
 };

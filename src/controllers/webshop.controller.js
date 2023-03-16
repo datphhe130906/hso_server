@@ -1,6 +1,8 @@
 const pick = require('../utils/pick');
 const catchAsync = require('../utils/catchAsync');
 const { webshopService } = require('../services');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
 const listItem = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['price', 'name']);
@@ -11,22 +13,41 @@ const listItem = catchAsync(async (req, res) => {
 
 const getItem = catchAsync(async (req, res) => {
   const result = await webshopService.getItem(req.params.type, req.params.id);
-  console.log(result);
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'TỆ');
+  }
+  res.send(result);
+});
+
+const deleteItem = catchAsync(async (req, res) => {
+  const result = await webshopService.deleteItem(req.params.type, req.params.id);
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'TỆ');
+  }
   res.send(result);
 });
 
 const createItem = catchAsync(async (req, res) => {
   const result = await webshopService.createItem(req.params.type, req.body);
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'TỆ');
+  }
   res.send(result);
 });
 
 const addItemToUser = catchAsync(async (req, res) => {
   const result = await webshopService.addItemToUserGame(req.user, req.body);
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'TỆ');
+  }
   res.send(result);
 });
 
 const buyMoneyInGame = catchAsync(async (req, res) => {
   const result = await webshopService.buyMoneyInGame(req.user, req.body);
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'TỆ');
+  }
   res.send(result);
 });
 
@@ -113,5 +134,6 @@ module.exports = {
   myHistory,
   createItem,
   getItem,
+  deleteItem,
   queryHistory,
 };
