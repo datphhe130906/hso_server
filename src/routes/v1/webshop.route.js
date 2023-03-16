@@ -7,6 +7,8 @@ const webshopValidation = require('../../validations/webshop.validation');
 const router = express.Router();
 
 router.get('/', auth(), webshopController.listItem);
+router.get('/:type/:id', auth(), webshopController.getItem);
+router.get('/:type', auth(), webshopController.createItem);
 router.get('/topRank', webshopController.topRank);
 router.post('/addItemToPlayer', auth(), validate(webshopValidation.addItemToUserGame), webshopController.addItemToUser);
 router.post('/buyMoneyInGame', auth(), validate(webshopValidation.buyMoneyInGame), webshopController.buyMoneyInGame);

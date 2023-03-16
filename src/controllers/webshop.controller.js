@@ -9,6 +9,17 @@ const listItem = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getItem = catchAsync(async (req, res) => {
+  const result = await webshopService.getItem(req.params.type, req.params.id);
+  console.log(result);
+  res.send(result);
+});
+
+const createItem = catchAsync(async (req, res) => {
+  const result = await webshopService.createItem(req.params.type, req.body);
+  res.send(result);
+});
+
 const addItemToUser = catchAsync(async (req, res) => {
   const result = await webshopService.addItemToUserGame(req.user, req.body);
   res.send(result);
@@ -100,5 +111,7 @@ module.exports = {
   updateItem,
   buyMoneyInGame,
   myHistory,
+  createItem,
+  getItem,
   queryHistory,
 };

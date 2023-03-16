@@ -7,7 +7,47 @@ const ApiError = require('../utils/ApiError');
 const Player = require('../models/mysqlModel/player.model');
 const logger = require('../config/logger');
 const pick = require('../utils/pick');
-const { filter } = require('compression');
+
+const createItem = async (type, body) => {
+  switch (parseInt(type, 10)) {
+    case 3:
+      rs = new Item3();
+      rs.itemId = body.itemId;
+      rs.name = body.name;
+      rs.iconId = body.iconId;
+      rs.price = body.price;
+      rs.content = body.content;
+      rs.level = body.level;
+      rs.clazz = body.clazz;
+      rs.part = body.part;
+      rs.type = body.type;
+      rs.color = body.color;
+      rs.data = body.data;
+      await rs.save();
+      break;
+    case 4:
+      rs = new Item4();
+      rs.itemId = body.itemId;
+      rs.icon = body.icon;
+      rs.name = body.name;
+      rs.price = body.price;
+      rs.content = body.content;
+      await rs.save();
+      break;
+    case 7:
+      rs = new Item7();
+      item.itemId = body.itemId;
+      rs.name = body.name;
+      rs.content = body.content;
+      rs.price = body.price;
+      rs.imgId = body.imgId;
+      await rs.save();
+      break;
+    default:
+      throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
+  }
+  return rs;
+};
 
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
@@ -24,6 +64,20 @@ const getListItem = async (filter, options, listNumber) => {
       return Item7.paginate(filter, options);
     default:
       return Item3.paginate(filter, options);
+  }
+};
+
+const getItem = async (listNumber, itemId) => {
+  console.log(listNumber, itemId);
+  switch (parseInt(listNumber)) {
+    case 3:
+      return Item3.findById(itemId);
+    case 4:
+      return Item4.findById(itemId);
+    case 7:
+      return Item7.findById(itemId);
+    default:
+      throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
   }
 };
 
@@ -341,8 +395,7 @@ const getTransaction = async (transId) => {
 };
 
 const getTransactions = async (filter, options) => {
-  const transactions = await Transaction.paginate(filter, options);
-  return transactions;
+  return await Transaction.paginate(filter, options);
 };
 
 const updateItem = async (item, body) => {
@@ -415,4 +468,6 @@ module.exports = {
   buyMoneyInGame,
   rankKing,
   queryHistory,
+  createItem,
+  getItem,
 };
