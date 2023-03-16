@@ -39,6 +39,9 @@ const item3schema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    image: {
+      type: String,
+    },
     content: {
       type: String,
     },

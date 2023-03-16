@@ -20,6 +20,7 @@ const createItem = async (type, body) => {
       rs.level = body.level;
       rs.clazz = body.clazz;
       rs.part = body.part;
+      rs.image = body.image;
       rs.type = body.type;
       rs.color = body.color;
       rs.data = body.data;
@@ -30,6 +31,7 @@ const createItem = async (type, body) => {
       rs.itemId = body.itemId;
       rs.icon = body.icon;
       rs.name = body.name;
+      rs.image = body.image;
       rs.price = body.price;
       rs.content = body.content;
       await rs.save();
@@ -40,6 +42,7 @@ const createItem = async (type, body) => {
       rs.name = body.name;
       rs.content = body.content;
       rs.price = body.price;
+      rs.image = body.image;
       rs.imgId = body.imgId;
       await rs.save();
       break;
@@ -68,7 +71,6 @@ const getListItem = async (filter, options, listNumber) => {
 };
 
 const getItem = async (listNumber, itemId) => {
-  console.log(listNumber, itemId);
   switch (parseInt(listNumber)) {
     case 3:
       return Item3.findById(itemId);
@@ -408,6 +410,7 @@ const updateItem = async (item, body) => {
       rs.price = body.price || rs.price;
       rs.content = body.content || rs.content;
       rs.level = body.level || rs.level;
+      rs.image = body.image || rs.image;
       rs.clazz = body.clazz || rs.clazz;
       rs.part = body.part || rs.part;
       rs.type = body.type || rs.type;
@@ -420,12 +423,14 @@ const updateItem = async (item, body) => {
       rs.icon = body.icon || rs.icon;
       rs.name = body.name || rs.name;
       rs.price = body.price || rs.price;
+      rs.image = body.image || rs.image;
       rs.content = body.content || rs.content;
       await rs.save();
       break;
     case 7:
       rs = await Item7.findById(body.itemId);
       rs.name = body.name || rs.name;
+      rs.image = body.image || rs.image;
       rs.content = body.content || rs.content;
       rs.price = body.price || rs.price;
       rs.imgId = body.imgId || rs.imgId;

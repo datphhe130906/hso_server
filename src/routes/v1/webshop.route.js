@@ -6,9 +6,6 @@ const webshopValidation = require('../../validations/webshop.validation');
 
 const router = express.Router();
 
-router.get('/', auth(), webshopController.listItem);
-router.get('/:type/:id', auth(), webshopController.getItem);
-router.get('/:type', auth(), webshopController.createItem);
 router.get('/topRank', webshopController.topRank);
 router.post('/addItemToPlayer', auth(), validate(webshopValidation.addItemToUserGame), webshopController.addItemToUser);
 router.post('/buyMoneyInGame', auth(), validate(webshopValidation.buyMoneyInGame), webshopController.buyMoneyInGame);
@@ -20,6 +17,9 @@ router.get('/myTransaction', auth(), webshopController.getMyTransactions);
 router.get('/myHistory', auth(), webshopController.myHistory);
 router.get('/listHistories', auth('manageUsers'), webshopController.queryHistory);
 router.patch('/updateItem/:item', auth('manageUsers'), webshopController.updateItem);
+router.get('/:type/:id', auth(), webshopController.getItem);
+router.get('/:type', auth(), webshopController.listItem);
+router.post('/:type', auth('manageUsers'), webshopController.createItem);
 router
   .route('/transaction/:transId')
   .get(auth('manageUsers'), webshopController.getTransaction)

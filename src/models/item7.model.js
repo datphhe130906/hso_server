@@ -15,6 +15,9 @@ const item7schema = mongoose.Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+    },
     content: {
       type: Number,
       required: true,
