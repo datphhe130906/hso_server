@@ -40,7 +40,8 @@ const userSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      default: 'active',
+      default: 'pending',
+      enum: { values: ['active', 'pending', 'banned'], message: '{VALUE} is not supported' },
     },
     totalPay: {
       type: Number,

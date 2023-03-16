@@ -36,7 +36,7 @@ const updateUser = {
       player1: Joi.string(),
       player2: Joi.string(),
       player3: Joi.string(),
-      status: Joi.string().valid('active', 'pending', 'ban'),
+      status: Joi.string().valid('active', 'banned'),
       role: Joi.string().valid('user', 'admin'),
       coin: Joi.number(),
     })

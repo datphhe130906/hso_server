@@ -108,6 +108,15 @@ const updateUserById = async (userId, updateBody) => {
     delete updateBody.status;
     delete updateBody.coin;
   }
+  if (updateBody.status === 'active') {
+    user.lock = 0;
+    user.status = 0;
+  }
+  if (updateBody.status === 'banned') {
+    user.lock = 1;
+    user.status = 1;
+  }
+
   Object.assign(user, updateBody);
   if (updateBody.password) {
     await Account.update(
