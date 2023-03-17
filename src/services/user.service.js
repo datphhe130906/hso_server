@@ -109,18 +109,24 @@ const updateUserById = async (userId, updateBody) => {
     delete updateBody.status;
     delete updateBody.coin;
   }
-  if (updateBody.coin) {
-    user.coin = updateBody.coin + user.coin;
-  }
   if (updateBody.status === 'active') {
     user.lock = 0;
     user.status = 0;
   }
   if (updateBody.status === 'ban') {
-    user.lock = 1;
-    user.status = 1;
+    const account = await Account.findOne({
+      where: {
+        user: user.user,
+      },
+    });
+    account.status = 0;
+    account.lock = 1;
+    await account.save();
   }
-
+  if (updateBody.coin) {
+    user.coin = updateBody.coin + user.coin;
+    delete updateBody.coin;
+  }
   Object.assign(user, updateBody);
   if (updateBody.password) {
     await Account.update(
