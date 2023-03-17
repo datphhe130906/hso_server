@@ -22,7 +22,7 @@ const paginate = (schema) => {
   schema.statics.paginate = async function (filter, options) {
     let sort = '';
     for (const [key, value] of Object.entries(filter)) {
-      filter[key] = isNaN(parseInt(value)) ? { $regex: `.*${value.replace(/%/g, '')}.*` } : value;
+      filter[key] = isNaN(parseInt(value)) ? { $regex: `.*${value.replace(/%/g, '')}.*`, $options: 'i' } : value;
     }
     if (options.sortBy) {
       const sortingCriteria = [];
