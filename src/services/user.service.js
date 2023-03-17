@@ -4,6 +4,7 @@ const { User } = require('../models');
 const Player = require('../models/mysqlModel/player.model');
 const Account = require('../models/mysqlModel/user.model');
 const authService = require('./auth.service');
+const { update } = require('../models/token.model');
 
 /**
  * Create a user
@@ -107,6 +108,9 @@ const updateUserById = async (userId, updateBody) => {
     delete updateBody.role;
     delete updateBody.status;
     delete updateBody.coin;
+  }
+  if (updateBody.coin) {
+    user.coin += updateBody.coin;
   }
   if (updateBody.status === 'active') {
     user.lock = 0;
