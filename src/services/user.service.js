@@ -110,13 +110,13 @@ const updateUserById = async (userId, updateBody) => {
     delete updateBody.coin;
   }
   if (updateBody.coin) {
-    user.coin += updateBody.coin;
+    user.coin = updateBody.coin + user.coin;
   }
   if (updateBody.status === 'active') {
     user.lock = 0;
     user.status = 0;
   }
-  if (updateBody.status === 'banned') {
+  if (updateBody.status === 'ban') {
     user.lock = 1;
     user.status = 1;
   }
