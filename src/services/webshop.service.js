@@ -413,12 +413,13 @@ const getTransactions = async (filter, options) => {
   return await Transaction.paginate(filter, options);
 };
 
-const updateItem = async (item, body) => {
+const updateItem = async (type, id, body) => {
   let rs;
-  switch (parseInt(item, 10)) {
+  switch (parseInt(type, 10)) {
     case 3:
-      rs = await Item3.findById(body.itemId);
+      rs = await Item3.findById(id);
       rs.name = body.name || rs.name;
+      rs.itemId = body.itemId || rs.itemId;
       rs.iconId = body.iconId || rs.iconId;
       rs.price = body.price || rs.price;
       rs.content = body.content || rs.content;
@@ -432,8 +433,9 @@ const updateItem = async (item, body) => {
       await rs.save();
       break;
     case 4:
-      rs = await Item4.findById(body.itemId);
+      rs = await Item4.findById(id);
       rs.icon = body.icon || rs.icon;
+      rs.itemId = body.itemId || rs.itemId;
       rs.name = body.name || rs.name;
       rs.price = body.price || rs.price;
       rs.image = body.image || rs.image;
@@ -441,8 +443,9 @@ const updateItem = async (item, body) => {
       await rs.save();
       break;
     case 7:
-      rs = await Item7.findById(body.itemId);
+      rs = await Item7.findById(id);
       rs.name = body.name || rs.name;
+      rs.itemId = body.itemId || rs.itemId;
       rs.image = body.image || rs.image;
       rs.content = body.content || rs.content;
       rs.price = body.price || rs.price;

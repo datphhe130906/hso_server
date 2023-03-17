@@ -66,7 +66,7 @@ const queryHistory = catchAsync(async (req, res) => {
 });
 
 const updateItem = catchAsync(async (req, res) => {
-  const result = await webshopService.updateItem(req.params.item, req.body);
+  const result = await webshopService.updateItem(req.params.type, req.params.id, req.body);
   res.send(result);
 });
 
