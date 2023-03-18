@@ -22,6 +22,10 @@ const history = mongoose.Schema(
       type: String,
       require: true,
     },
+    user: {
+      type: String,
+      require: true,
+    },
     typeItem: {
       type: Number,
       require: true,
