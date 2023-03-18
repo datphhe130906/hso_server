@@ -220,15 +220,16 @@ const buyMoneyInGame = async (user, body) => {
       name: body.player,
     },
   });
+  console.log(player.vang);
   let priceToPay;
   if (body.type != 'kimcuong' && body.type != 'vang') throw new ApiError(httpStatus.NO_CONTENT, 'Unprocessable Entity');
   if (body.type == 'vang') {
-    player.vang += value;
-    priceToPay -= Math.round(body.value / 5000);
+    player.vang += body.value;
+    priceToPay = Math.round(body.value / 5000);
   }
   if (body.type == 'kimcuong') {
     player.kimcuong += body.value;
-    priceToPay -= body.value * 2;
+    priceToPay = body.value * 2;
   }
   if (priceToPay > user.coin) throw new ApiError(httpStatus.PAYMENT_REQUIRED, 'Bạn không đủ tiền thanh toán');
   user.coin -= priceToPay;

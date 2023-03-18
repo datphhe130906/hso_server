@@ -27,6 +27,8 @@ const Player = sequelize.define(
     item7: {
       type: DataTypes.TEXT,
     },
+    vang: Sequelize.BIGINT(20),
+    kimcuong: Sequelize.BIGINT(20),
   },
   { tableName: 'player' }
 );
