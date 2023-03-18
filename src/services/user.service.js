@@ -154,6 +154,18 @@ const deleteUserById = async (userId) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
+  
+  const account = await Account.findOne({
+    where: {
+      user: user.user,
+    },
+  });
+  await Player.destroy({
+    where: {
+      name: [user.player1, user.player2, user.player3],
+    },
+  });
+  await account.destroy();
   await user.remove();
   return user;
 };
