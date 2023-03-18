@@ -7,6 +7,10 @@ const history = mongoose.Schema(
       type: String,
       required: true,
     },
+    player: {
+      type: String,
+      required: true,
+    },
     unitPrice: {
       type: Number,
     },
@@ -14,7 +18,10 @@ const history = mongoose.Schema(
       type: Number,
       require: true,
     },
-    // type of item: 1: Vàng, 2: Kim Cương, 3: Trang Bị...
+    name: {
+      type: String,
+      require: true,
+    },
     typeItem: {
       type: Number,
       require: true,
