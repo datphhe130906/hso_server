@@ -242,7 +242,7 @@ const buyMoneyInGame = async (user, body) => {
   newHistory.userId = user.id;
   newHistory.user = user.user;
   newHistory.player = body.player;
-  newHistory.nameItem = body.type == 'vang' ? 'Mua Vàng' : 'Mua Kim Cương';
+  newHistory.name = body.type == 'vang' ? 'Mua Vàng' : 'Mua Kim Cương';
   newHistory.typeItem = body.type == 'vang' ? 1 : 2;
   newHistory.quantity = body.value;
   newHistory.price = priceToPay;
