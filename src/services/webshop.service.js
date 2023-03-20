@@ -209,9 +209,8 @@ const addItemToUserGame = async (user, body) => {
   newHistory.itemId = body.itemId;
   newHistory.player = body.player;
   newHistory.name = itemInfo.name;
-  newHistory.unitPrice = itemInfo.price;
+  newHistory.unitPrice = itemInfo.price * body.quantity;
   newHistory.quantity = body.quantity || 1;
-  newHistory.price = priceToPay;
   await newHistory.save();
 
   return itemInfo;
@@ -244,7 +243,7 @@ const buyMoneyInGame = async (user, body) => {
   newHistory.name = body.type == 'vang' ? 'Mua Vàng' : 'Mua Kim Cương';
   newHistory.typeItem = body.type == 'vang' ? 1 : 2;
   newHistory.quantity = body.value;
-  newHistory.price = priceToPay;
+  newHistory.unitPrice = priceToPay;
   await newHistory.save();
   return player;
 };
