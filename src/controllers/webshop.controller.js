@@ -58,10 +58,17 @@ const myHistory = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-const queryHistory = catchAsync(async (req, res) => {
+const queryHistoryItem = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['typeItem', 'itemId', 'userId', 'itemId']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await webshopService.queryHistory(filter, options);
+  res.send(result);
+});
+
+const queryHistoryMoney = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['typeItem', 'itemId', 'userId', 'itemId']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await webshopService.queryHistoryMoney(filter, options);
   res.send(result);
 });
 
@@ -135,5 +142,6 @@ module.exports = {
   createItem,
   getItem,
   deleteItem,
-  queryHistory,
+  queryHistoryItem,
+  queryHistoryMoney,
 };

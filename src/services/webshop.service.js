@@ -256,6 +256,12 @@ const myHistory = async (user, query) => {
 };
 
 const queryHistory = async (filter, options) => {
+  filter.typeItem = { $gt: 2 };
+  return await History.paginate(filter, options);
+};
+
+const queryHistoryMoney = async (filter, options) => {
+  filter.typeItem = { $not: { $gt: 2 } };
   return await History.paginate(filter, options);
 };
 
@@ -489,6 +495,7 @@ module.exports = {
   getTransaction,
   getTransactions,
   getMyTransactions,
+  queryHistoryMoney,
   napCard,
   updateItem,
   myHistory,

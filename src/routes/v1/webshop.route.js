@@ -15,7 +15,8 @@ router.post('/napCard', auth(), validate(webshopValidation.napCard), webshopCont
 router.get('/transaction', auth('manageUsers'), webshopController.getTransactions);
 router.get('/myTransaction', auth(), webshopController.getMyTransactions);
 router.get('/myHistory', auth(), webshopController.myHistory);
-router.get('/listHistories', auth('manageUsers'), webshopController.queryHistory);
+router.get('/listItemHistories', auth('manageUsers'), webshopController.queryHistoryItem);
+router.get('/listMoneyHistories', auth('manageUsers'), webshopController.queryHistoryMoney);
 router.get('/:type', auth(), webshopController.listItem);
 router.post('/:type', auth('manageUsers'), webshopController.createItem);
 
