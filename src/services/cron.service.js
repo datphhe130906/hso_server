@@ -7,7 +7,7 @@ const { checkTrans } = require('./webshop.service');
 const { Transaction, User } = require('../models');
 const Account = require('../models/mysqlModel/user.model');
 const configs = require('../config/config');
-// const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require('node-telegram-bot-api');
 
 async function runCronJob() {
   cron.schedule('00 */1 * * * *', async () => {
@@ -46,7 +46,7 @@ async function runCronJob() {
         await user.updateOne(
           {
             coin: user.coin + (rs.data.value * configs.gachthe1s.rate) / 100,
-            totalPay: user.totalPay + rs.data.value,
+            totalPay: user.totalPay + (rs.data.value * configs.gachthe1s.rate) / 100,
           },
           { new: true }
         );
