@@ -23,12 +23,6 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
 // set security HTTP headers
 app.use(helmet());
 
@@ -46,7 +40,7 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-// app.use(cors());
+app.use(cors());
 // app.options('*', cors());
 
 // jwt authentication
