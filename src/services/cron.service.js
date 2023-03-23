@@ -7,7 +7,8 @@ const { checkTrans } = require('./webshop.service');
 const { Transaction, User } = require('../models');
 const Account = require('../models/mysqlModel/user.model');
 const configs = require('../config/config');
-const TelegramBot = require('node-telegram-bot-api');
+// const TelegramBot = require('node-telegram-bot-api');
+const { bot } = require('../utils/bot');
 
 async function runCronJob() {
   cron.schedule('00 */1 * * * *', async () => {
@@ -50,7 +51,7 @@ async function runCronJob() {
           },
           { new: true }
         );
-        const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+
         await bot.sendMessage(
           '-913523699',
           `[Nhận tiền gachthe1s]:
@@ -107,10 +108,32 @@ async function runCronJob() {
             },
             { new: true }
           );
-          const bot = new TelegramBot('6029081062:AAHuZtysElaHgYtRZuQpIjnSSq8KDJD6EE4', { polling: true });
+
           await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
         }
       }
+    }
+  });
+  cron.schedule('00 */1 * * * *', async () => {
+    logger.info('Cron Chuyển tiền về ví momo xịn');
+    const checkBalance = await axios.get(`https://api.web2m.com/apigetsodu/${configs.momoApis.token}`);
+    if (checkBalance.data.SoDu <= 100_000) {
+      return;
+    }
+    const trans = await axios.post('https://api.web2m.com/api/v3/service/momo/transfer', {
+      token: configs.momoApis.token,
+      phone: '0879003737',
+      amount: 100000,
+      comment: 'HsoRaze Api.Web2m auto chuyển tiền',
+      password: '061019',
+    });
+    if (trans.data.status == 200 && trans.data.code == 999) {
+      await bot.sendMessage(
+        '-913523699',
+        `Đã Tự Động Rút 100k Từ Tài Khoản 0963225935 Về Tài Khoản 0879003737. Chúc Bạn Nhanh Giàu 🥰`
+      );
+    } else {
+      await bot.sendMessage('-913523699', `Có tiền rồi nhưng chuyển thất bại, kiểm tra lại nhé.`);
     }
   });
 }
