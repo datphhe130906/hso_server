@@ -421,7 +421,15 @@ const getTransaction = async (transId) => {
 };
 
 const getTransactions = async (filter, options) => {
-  return await Transaction.paginate(filter, options);
+  let list = await Transaction.paginate(filter, options);
+  list = JSON.parse(JSON.stringify(list));
+  for (const iterator of list.results) {
+    if (iterator.userId != null && iterator.userId !== '' && iterator.userId !== 'null') {
+      const user = await User.findById(iterator.userId);
+      iterator.user = user.user;
+    }
+  }
+  return list;
 };
 
 const updateItem = async (type, id, body) => {
