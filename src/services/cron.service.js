@@ -109,7 +109,8 @@ async function runCronJob() {
             { new: true }
           );
 
-          await bot.sendMessage('-913523699', `Tài khoản ${user.user} vừa nạp ${rs.data.value} thành công.`);
+          await bot.sendMessage('-913523699', `[Nhận tiền Momo]:
+          -Tài khoản ${user.user} vừa nạp ${iterator.value} thành công.`);
         }
       }
     }
