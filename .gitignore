@@ -5,8 +5,8 @@ node_modules
 yarn-error.log
 
 # Environment varibales
-.env
-.env.*
+.env.development
+.env.production
 !.env*.example
 
 # Code coverage
