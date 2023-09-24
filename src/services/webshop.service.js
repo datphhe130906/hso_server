@@ -288,7 +288,7 @@ const napCard = async (user, body) => {
     command: 'charging',
     sign,
   });
-  logger.info(apiGachthe.data);
+  // logger.info(apiGachthe.data);
   switch (parseInt(apiGachthe.data.status)) {
     case 99:
       console.log('99');
