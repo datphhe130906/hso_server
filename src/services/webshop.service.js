@@ -277,7 +277,10 @@ const napCard = async (user, body) => {
     serial: body.serial,
     code: body.code,
   };
-  const sign = MD5(`${config.gachthe1s.partner_key}${body.code}${body.serial}`).toString();
+  console.log(body)
+  console.log(`${config.gachthe1s.partner_key}${body.code}${body.serial}`)
+  const sign = MD5(`${config.gachthe1s.partner_key}${body.code}${body.serial}`)
+  logger.info(sign);
   const apiGachthe = await axios.post(config.gachthe1s.url, {
     request_id: requestId,
     amount: body.amount,
@@ -288,7 +291,7 @@ const napCard = async (user, body) => {
     command: 'charging',
     sign,
   });
-  // logger.info(apiGachthe.data);
+  logger.info(apiGachthe.data);
   switch (parseInt(apiGachthe.data.status)) {
     case 99:
       console.log('99');
